@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Plan</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <h1>Workout Plan Manager</h1>
+
+    <div id="workout-plan-display"></div>
+
+    <div>
+        <h3>Add an Exercise</h3>
+        <select id="add-day">
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+            <option value="Sunday">Sunday</option>
+        </select>
+        <select id="category" onchange="filterAddExercises('category', 'add-exercise')">
+            <option value="all">All</option>
+            <option value="Chest">Chest</option>
+            <option value="Back">Back</option>
+            <option value="Core">Core</option>
+            <option value="Shoulders">Shoulders</option>
+            <option value="Legs">Legs</option>
+            <option value="Biceps">Biceps</option>
+            <option value="Triceps">Triceps</option>
+        </select>
+        <select id="add-exercise">
+            <option value="Push-ups" data-category="Chest">Push-ups</option>
+            <option value="Plank" data-category="Core">Plank</option>
+            <option value="Squats" data-category="Legs">Squats</option>
+            <option value="Sit-ups" data-category="Core">Sit-ups</option>
+            <option value="Yoga" data-category="Core">Yoga</option>
+            <option value="Deadlift" data-category="Legs">Deadlift</option>
+            <option value="Bench Press" data-category="Chest">Bench Press</option>
+            <option value="Pull-ups" data-category="Back">Pull-ups</option>
+            <option value="Leg Press" data-category="Legs">Leg Press</option>
+            <option value="Dumbbell Fly" data-category="Chest">Dumbbell Fly</option>
+            <option value="Incline Bench Press" data-category="Chest">Incline Bench Press</option>
+            <option value="Incline Dumbbell Fly" data-category="Chest">Incline Dumbbell Fly</option>
+            <option value="Hammer Machine Incline" data-category="Chest">Hammer Machine Incline Press</option>
+            <option value="Machine Chest Press" data-category="Chest">Machine Chest Press</option>
+            <option value="Lat-Pulldown" data-category="Back">Lat-Pulldown</option>
+            <option value="One-arm Dumbbell Row" data-category="Back">One-arm Dumbbell Row</option>
+            <option value="Seated Cable Row" data-category="Back">Seated Cable Row</option>
+            <option value="Barbell Bent Over Row" data-category="Back">Barbell Bent Over Row</option>
+            <option value="Hammer Machine Row" data-category="Back">Hammer Machine Row</option>
+            <option value="Dumbbell Bench Press" data-category="Chest">Dumbbell Bench Press</option>
+            <option value="Dumbbell Incline Bench Press" data-category="Chest">Dumbbell Incline Bench Press</option>
+            <option value="Pec Deck" data-category="Chest">Pec Deck</option>
+            <option value="Skull Crushers" data-category="Triceps">Skull Crushers</option>
+            <option value="Rope Extensions" data-category="Triceps">Rope Extensions</option>
+            <option value="Straight Bar Pushdowns" data-category="Triceps">Straight Bar Pushdowns</option>
+            <option value="Rope Crunch " data-category="Core">Rope Crunch</option>
+            <option value="Hanging Knee Raise" data-category="Core">Hanging Knee Raise</option>
+        </select>
+        <input type="text" id="add-sets" placeholder="Sets">
+        <input type="text" id="add-reps" placeholder="Reps">
+        <button onclick="addExercise()">Add Exercise</button>
+    </div>
+
+    <div>
+        <h3>Add Cardio</h3>
+        <select id="add-day">
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+            <option value="Sunday">Sunday</option>
+        </select>
+        <select id="add-cardio">
+            <option value="Running">Running</option>
+            <option value="Swimming">Swimming</option>
+            <option value="Cycling">Cycling</option>
+            <option value="Stair-climber">Stair-climber</option>
+        </select>
+        <input type="number" id="add-hours" placeholder="Hours">
+        <input type="number" id="add-minutes" placeholder="Minutes">
+        <button onclick="addCardio()">Add Cardio</button>
+    </div>
+
+    <div>
+        <h3>Reset Exercises</h3>
+        <button onclick="resetExercises()">Reset</button>
+    </div>
+
+    <div>
+        <h3>Print workout Plan</h3>
+        <button onclick="printWorkoutPlan()">Print</button>
+    </div>
+
+
+    <div class="tab-container">
+        <div class="tab-buttons">
+            <button class="tab-button" onclick="openTab(event, 'tab1')">Upper Body</button>
+            <button class="tab-button" onclick="openTab(event, 'tab2')">Lower Body</button>
+            <button class="tab-button" onclick="openTab(event, 'tab3')">Cardio</button>
+            <button class="tab-button" onclick="openTab(event, 'tab4')">Core</button>
+            <button class="tab-button" onclick="openTab(event, 'tab5')">Warm-up</button>
+        </div>
+
+        <div id="tab1" class="tab-content">
+            <h2>Exercises/Upperbody</h2>
+            <p>Workouts for upperbody</p>
+            <option value="Push-ups">Push-ups</option>
+            <option value="Dumbbell Fly">Dumbbell Fly</option>
+            <option value="Incline Bench Press">Incline Bench Press</option>
+            <option value="Incline Dumbbell Fly">Incline Dumbbell Fly</option>
+            <option value="Hammer Machine Incline">Hammer Machine Incline Press</option>
+            <option value="Machine Chest Press">Machine Chest Press</option>
+            <option value="Lat-Pulldown">Lat-Pulldown</option>
+            <option value="One-arm Dumbbell Row">One-arm Dumbbell Row</option>
+            <option value="Seated Cable Row">Seated Cable Row</option>
+            <option value="Pull-ups">Pull-ups</option>
+            <option value="Barbell Bent Over Row">Barbell Bent Over Row</option>
+            </select>
+        </div>
+
+        <div id="tab2" class="tab-content">
+            <h2>Exercises/Lower Body</h2>
+            <p>Workouts for lower body</p>
+        </div>
+
+        <div id="tab3" class="tab-content">
+            <h2>Excercises/Cardio</h2>
+            <p>Cardio workouts for before and after workout</p>
+        </div>
+
+        <div id="tab4" class="tab-content">
+            <h2>Exercises/Core</h2>
+            <p>Workouts for core</p>
+        </div>
+
+        <div id="tab5" class="tab-content">
+            <h2>Exercises/Warm-up</h2>
+            <p>Warm-up workouts and stretches</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
