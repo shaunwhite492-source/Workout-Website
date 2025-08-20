@@ -111,6 +111,17 @@ div {
     display: inline;
 }
 
+.unit { margin: 0 6px 0 12px; color:#555; font-size:.9rem; }
+
+.unit-wrap { position:relative; display:inline-block; }
+.unit-wrap select { padding-right:2.4em; }
+.unit-wrap::after {
+  content: attr(data-unit);
+  position:absolute; right:.5rem; top:50%;
+  transform: translateY(-50%); pointer-events:none; opacity:.7; font-size:.9em;
+}
+
+
 
 
 

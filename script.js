@@ -60,6 +60,30 @@ function displayWorkoutPlan(filteredCategory = 'all') {
             displayWorkoutPlan();
         }
 
+function fillNumberSelect(selectId, start, end, step = 1, { defaultValue = null, extras = [] } = {}) {
+  const sel = document.getElementById(selectId);
+  if (!sel) return;
+  sel.innerHTML = '';
+
+  // Optional special items (e.g., AMRAP)
+  extras.forEach(({ label, value }) => {
+    const opt = document.createElement('option');
+    opt.value = String(value);
+    opt.textContent = label;
+    sel.appendChild(opt);
+  });
+
+  for (let i = start; i <= end; i += step) {
+    const opt = document.createElement('option');
+    opt.value = String(i);
+    opt.textContent = String(i);   // ← you were missing this
+    sel.appendChild(opt);
+  }
+
+  if (defaultValue !== null) sel.value = String(defaultValue);
+}
+
+
 
 
 function addExercise() {
@@ -80,7 +104,7 @@ function addExercise() {
 
 function addCardio() {
     let day = document.getElementById('add-day').value;
-    let exercise = document.getElementById('add-cardio');
+    let exercise = document.getElementById('add-cardio-day');
     let exerciseName = exercise.value;
     let category = exercise.options[exercise.selectedIndex].dataset.category;
     let hours = document.getElementById('add-hours').value;
@@ -155,12 +179,6 @@ function filterAddExercises(categorySelectId, exerciseSelectId) {
         exerciseSelect.value = firstVisibleOption.value;
     }
 }
-
-// Initially display the workout plan and open the first tab
-window.onload = function() {
-    displayWorkoutPlan();
-    document.querySelector('.tab-button').click();
-};
 
 // ===== Wger integration =====
 const WGER_API = 'https://wger.de/api/v2';
@@ -302,13 +320,18 @@ function addCardio() {
 
 // Replace your window.onload with this (so we load Wger first)
 window.addEventListener('load', async () => {
-  try {
-    await loadWgerCatalog();
-  } catch (e) {
-    console.error(e);
-    // If Wger is unreachable (offline/CORS), your hardcoded options still work.
-  }
+  // Load Wger options first (safe if it fails)
+  try { await loadWgerCatalog(); } catch (e) { console.error(e); }
+
+  // Now fill the number dropdowns
+  fillNumberSelect('add-sets',    1, 10, 1, { defaultValue: 4 });
+  fillNumberSelect('add-reps',    1, 30, 1, { defaultValue: 12, extras: [{ label: 'AMRAP', value: 'AMRAP' }] });
+  fillNumberSelect('add-hours',   0,  3, 1, { defaultValue: 0 });
+  fillNumberSelect('add-minutes', 0, 55, 5, { defaultValue: 30 });
+
+  // Your existing startup
   displayWorkoutPlan();
   document.querySelector('.tab-button')?.click();
 });
+
 

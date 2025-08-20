@@ -64,14 +64,17 @@
             <option value="Rope Crunch " data-category="Core">Rope Crunch</option>
             <option value="Hanging Knee Raise" data-category="Core">Hanging Knee Raise</option>
         </select>
-        <input type="text" id="add-sets" placeholder="Sets">
-        <input type="text" id="add-reps" placeholder="Reps">
+        <label for="add-sets" class="units">Sets</label>
+        <select id ="add-sets"></select>
+
+        <label for="add-reps" class="units">Reps</label>
+        <select id="add-reps"></select>
         <button onclick="addExercise()">Add Exercise</button>
     </div>
 
     <div>
         <h3>Add Cardio</h3>
-        <select id="add-day">
+        <select id="add-day-cardio">
             <option value="Monday">Monday</option>
             <option value="Tuesday">Tuesday</option>
             <option value="Wednesday">Wednesday</option>
@@ -86,8 +89,11 @@
             <option value="Cycling">Cycling</option>
             <option value="Stair-climber">Stair-climber</option>
         </select>
-        <input type="number" id="add-hours" placeholder="Hours">
-        <input type="number" id="add-minutes" placeholder="Minutes">
+        <label for="add-hours" class="unit">hrs</label>
+        <select id="add-hours"></select>
+
+        <label for="add-minutes" class="unit">min</label>
+        <select id="add-minutes"></select>
         <button onclick="addCardio()">Add Cardio</button>
     </div>
 
