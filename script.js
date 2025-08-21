@@ -102,21 +102,6 @@ function addExercise() {
     }
 }
 
-function addCardio() {
-    let day = document.getElementById('add-day').value;
-    let exercise = document.getElementById('add-cardio-day');
-    let exerciseName = exercise.value;
-    let category = exercise.options[exercise.selectedIndex].dataset.category;
-    let hours = document.getElementById('add-hours').value;
-    let minutes = document.getElementById('add-minutes').value;
-
-    if (workoutPlan[day]) {
-        workoutPlan[day].push({ exercise: exerciseName, time: `${hours}h ${minutes}m`, category: category });
-        displayWorkoutPlan();
-    } else {
-        alert("Invalid day of the week!");
-    }
-}
 
 function resetExercises() {
     Object.keys(workoutPlan).forEach(day => {
@@ -299,7 +284,6 @@ async function loadWgerCatalog() {
 // ===== small updates to your existing functions =====
 
 // Use the unique cardio day select id
-const originalAddCardio = (typeof addCardio === 'function') ? addCardio : null;
 function addCardio() {
   const daySel = document.getElementById('add-day-cardio'); // changed from 'add-day'
   const day = daySel ? daySel.value : document.getElementById('add-day').value; // fallback just in case
@@ -318,6 +302,68 @@ function addCardio() {
   }
 }
 
+// ===== ZenQuotes integration =====
+// Endpoints: /today (quote of the day), /random (random quote)
+// Returns: JSON array like [{ q: "...", a: "...", h: "<em>…</em> — …" }]
+// Docs: https://docs.zenquotes.io/zenquotes-documentation/
+
+const apiUrl = (mode) =>
+  `https://api.allorigins.win/raw?url=${encodeURIComponent('https://zenquotes.io/api/' + mode)}`;
+
+async function fetchZenQuote(mode = 'today') {
+  const res = await fetch(apiUrl(mode), { cache: 'no-store' });
+  if (!res.ok) throw new Error(`ZenQuotes error ${res.status}`);
+  let data;
+  try { data = await res.json(); }
+  catch { data = JSON.parse(await res.text()); }
+  return Array.isArray(data) && data.length ? data[0] : null;
+}
+
+function renderQuote(elId, qData) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  if (!qData) {
+    el.innerHTML = '<em>Could not load quote. Try again.</em>';
+    return;
+  }
+
+  const quoteTxt = qData.q || '';
+  const authorTxt = qData.a ? ` — ${qData.a}` : '';
+
+  el.innerHTML = ''; // clear previous
+  const emEl = document.createElement('em');
+  emEl.textContent = `“${quoteTxt}”`;
+  el.appendChild(emEl);
+
+  if (authorTxt) {
+    const span = document.createElement('span');
+    span.className = 'meta';
+    span.textContent = authorTxt;
+    el.appendChild(span);
+  }
+}
+
+async function loadQuoteOfDay() {
+  try {
+    const q = await fetchZenQuote('today');
+    renderQuote('quote-of-day', q);
+  } catch (e) {
+    console.error(e);
+    renderQuote('quote-of-day',null);
+  }
+}
+
+async function loadRandomQuote() {
+  try {
+    const q = await fetchZenQuote('random');
+    renderQuote('quote-of-day', q);
+  } catch (e) {
+    console.error(e);
+    renderQuote('quote-of-day', null);
+  }
+}
+
+
 // Replace your window.onload with this (so we load Wger first)
 window.addEventListener('load', async () => {
   // Load Wger options first (safe if it fails)
@@ -328,6 +374,11 @@ window.addEventListener('load', async () => {
   fillNumberSelect('add-reps',    1, 30, 1, { defaultValue: 12, extras: [{ label: 'AMRAP', value: 'AMRAP' }] });
   fillNumberSelect('add-hours',   0,  3, 1, { defaultValue: 0 });
   fillNumberSelect('add-minutes', 0, 55, 5, { defaultValue: 30 });
+
+  //ZenQuotes wiring (buttons + initial quote)
+  document.getElementById('btn-qotd')?.addEventListener('click', loadQuoteOfDay);
+  document.getElementById('btn-random')?.addEventListener('click', loadRandomQuote);
+  await loadQuoteOfDay();
 
   // Your existing startup
   displayWorkoutPlan();
